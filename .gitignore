@@ -1,4 +1,5 @@
-zig-cache/
+.zig-cache/
 zig-out/
 __pycache__/
+.idea/
 imgui.ini

@@ -11,12 +11,7 @@ const zig_imgui_path = std.fs.path.dirname(srcFile()).?;
 pub fn get_module(b: *std.Build) *std.Build.Module
 {
     return b.addModule(zig_imgui_mod_name,.{
-        .root_source_file = .{
-            .path = b.pathJoin(&[_][]const u8 {
-                zig_imgui_path,
-                "imgui.zig",
-            })
-        },
+        .root_source_file = b.path(b.pathJoin(&.{zig_imgui_path, "imgui.zig"})),
     });
 }
 
@@ -24,14 +19,14 @@ pub fn link_cimgui_source_files(b: *std.Build, exe: *std.Build.Step.Compile) voi
     exe.addCSourceFile
     (
         .{
-            .file = .{
-                .path = b.pathJoin(&[_][]const u8 {
+            .file = b.path(
+                b.pathJoin(&.{
                     zig_imgui_path,
                     "vendor",
                     "cimgui",
                     "cimgui_unity.cpp",
                 })
-            },
+            ),
             .flags = &[_][]const u8
             {
                 "-std=c++11",
@@ -51,7 +46,7 @@ pub fn link_lunasvg_source_files(b: *std.Build, exe: *std.Build.Step.Compile) vo
         "lunasvg",
     });
 
-    exe.addIncludePath(.{ .path = b.pathJoin(&[_][]const u8 { lunasvg_path, "3rdparty", "plutovg" }) });
+    exe.addIncludePath(b.path(b.pathJoin(&.{lunasvg_path, "3rdparty", "plutovg"})));
     exe.addCSourceFiles
     (
         .{
@@ -77,7 +72,7 @@ pub fn link_lunasvg_source_files(b: *std.Build, exe: *std.Build.Step.Compile) vo
         }
     );
 
-    exe.addIncludePath(.{ .path = b.pathJoin(&[_][]const u8 { lunasvg_path, "include" }) });
+    exe.addIncludePath(b.path(b.pathJoin(&.{lunasvg_path, "include"})));
     exe.addCSourceFiles
     (
         .{
@@ -159,12 +154,12 @@ pub fn add_test_step(
 ) void {
     const test_exe = b.addTest(
         .{
-            .root_source_file = .{
-                .path = b.pathJoin(&[_][]const u8 {
+            .root_source_file = b.path(
+                b.pathJoin(&.{
                     zig_imgui_path,
                     "tests.zig",
                 })
-            },
+            ),
             .target = target,
             .optimize = optimize,
         }
